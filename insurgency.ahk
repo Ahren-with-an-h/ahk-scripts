@@ -1,6 +1,7 @@
 #InstallMouseHook
 #UseHook On
 #IfWinActive ahk_exe AppName
+SetKeyDelay, 0, 50
 
 $xbutton1::msgbox key - xbutton1
 $xbutton2::msgbox key - xbutton2
