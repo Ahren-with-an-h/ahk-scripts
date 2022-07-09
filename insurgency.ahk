@@ -1,18 +1,16 @@
-#InstallMouseHook
-#UseHook On
-#IfWinActive ahk_exe AppName
-SetKeyDelay, 0, 50
+f7::Reload ; Reload script
 
-$xbutton1::msgbox key - xbutton1
-$xbutton2::msgbox key - xbutton2
-$xbutton3::msgbox key - xbutton3
-$xbutton4::msgbox key - xbutton4
+#IfWinActive ahk_exe InsurgencyClient-Win64-Shipping.exe
 
-$LButton::Click   ; Sends a mouse click and release on press, does not wait for actual release
+LWin::Return ; disable windows key
+RWin::Return ; disable windows key
 
-; Hotkey, $LButton, QuickPress, Off
+$LButton:: ; Sends a mouse click and release on press, does not wait for actual release
+	Send, {LButton down}
+	Random, rand, 10, 50
+	Sleep, rand
+	Send, {LButton up}
+	Return
 
-QuickPress()
-{
-	Send Click
-}
+f23::Hotkey, $LButton, , Off ; mouse6 sends f23 which turns off the hotkey
+f24::Hotkey, $LButton, , On ; mouse7 sends f24 to turn it on
