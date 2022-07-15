@@ -1,8 +1,12 @@
-; Reload script
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+
 F8::Reload
 
 ; ##############################
-; Mouse 6 & 7 bindings (m6=F24, m7=F23)
+; Mouse 6 & 7 bindings (up switch m6=F24, down switch m7=F23)
 f23::Send ^v
 f24::Send ^c
 
@@ -69,8 +73,8 @@ $LButton:: ; Sends a mouse click and release on press, does not wait for actual 
 	Send, {LButton up}
 	Return
 
-f23::Hotkey, $LButton, , Off ; mouse6 sends f23 which turns off the hotkey
-f24::Hotkey, $LButton, , On ; mouse7 sends f24 to turn it on
+f23::Hotkey, $LButton, , Off ; mouse6 sends f23 which turns off the hotkey (Revert to regular left mouse button function, or full-auto)
+f24::Hotkey, $LButton, , On ; mouse7 sends f24 to turn it on (Switch to forced semi-auto hotkey for left mouse)
 
 ; ### Stationeers ###
 #IfWinActive ahk_exe rocketstation.exe
