@@ -1,12 +1,8 @@
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-
+; Reload script
 F8::Reload
 
 ; ##############################
-; Mouse 6 & 7 bindings (up switch m6=F24, down switch m7=F23)
+; Mouse 6 & 7 bindings (m6=F24, m7=F23)
 f23::Send ^v
 f24::Send ^c
 
@@ -56,26 +52,33 @@ Return
 ; return
 
 
-; ##############################
-; # Specific Games
-; ##############################
+; ; ##############################
+; ; # Specific Games
+; ; ##############################
 
-; ### Insurgency ###
 #IfWinActive ahk_exe InsurgencyClient-Win64-Shipping.exe
 
-LWin::Return ; disable windows key
-RWin::Return ; disable windows key
+*LWin::Return ; disable windows key
+*RWin::Return ; disable windows key
 
-$LButton:: ; Sends a mouse click and release on press, does not wait for actual release
-	Send, {LButton down}
-	Random, rand, 10, 50
-	Sleep, rand
-	Send, {LButton up}
+$*LButton:: ; Sends a mouse click and release on press, does not wait for actual release. '*' lets it work with any modifiers (shift, etc.)
+	Click
+	; Send, {LButton down}
+	; Random, rand, 10, 20
+	; Sleep, rand
+	; Send, {LButton up}
 	Return
 
-f23::Hotkey, $LButton, , Off ; mouse6 sends f23 which turns off the hotkey (Revert to regular left mouse button function, or full-auto)
-f24::Hotkey, $LButton, , On ; mouse7 sends f24 to turn it on (Switch to forced semi-auto hotkey for left mouse)
+f23::Hotkey, $*LButton, , Off ; mouse6 sends f23 which turns off the hotkey
+f24::Hotkey, $*LButton, , On ; mouse7 sends f24 to turn it on
 
-; ### Stationeers ###
-#IfWinActive ahk_exe rocketstation.exe
-XButton2::Send {LButton Down}
+
+#IfWinActive ahk_class UnrealWindow
+
+*LWin::Return ; disable windows key
+*RWin::Return ; disable windows key
+
+
+; ; ### Stationeers ###
+; #IfWinActive ahk_exe rocketstation.exe
+; XButton2::
