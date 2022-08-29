@@ -1,50 +1,24 @@
-; Loop
-; {
-;   Sleep 60000 ; wait 1 minute
+; ### Stop miner if app in list is running. Start miner when neither miner nor game in list is running.
 
-;   IfWinExist, C:\WINDOWS\system32\cmd.exe - C:\Mining\PhoenixMiner_5.6d_Windows_Real\start_miner.bat
-;     {
-;       continue
-;     }
-;   else IfWinExist Insurgency
-;     {
-;       if WinExist("C:\WINDOWS\system32\cmd.exe - C:\Mining\PhoenixMiner_5.6d_Windows_Real\start_miner.bat")
-;       WinClose ; Use the window found by WinExist.
-;       continue
-;     }
-;   else
-;     {
-;       Run C:\Mining\PhoenixMiner_5.6d_Windows_Real\Custom_Start_Minimized.bat
-;     }
-; }
+miner := {"title": "C:\WINDOWS\system32\cmd.exe - C:\Mining\PhoenixMiner_5.6d_Windows_Real\start_miner.bat"
+        , "path": "C:\Mining\PhoenixMiner_5.6d_Windows_Real\Custom_Start_Minimized.bat"}
+games := ["Insurgency: Sandstorm", "DOS"]
 
+SetTimer, Status_Check, 10000
 
-Loop
-{
-  Sleep 15000 ; wait 15 seconds
+Status_Check:
+  gameIsRunning := AnyWinOfExist(games)
+  if(gameIsRunning && WinExist(miner.title)){
+      WinClose, % miner.title
+  } else if(!gameIsRunning && !WinExist(miner.title)){
+      Run, % miner.path
+  }
+return
 
-  ; If Insurgency is running...
-  IfWinExist, Insurgency
-    {
-      ; and miner is running, close miner
-      IfWinExist, C:\WINDOWS\system32\cmd.exe - C:\Mining\PhoenixMiner_5.6d_Windows_Real\start_miner.bat
-        {
-          WinClose
-        }
-      ; But if just Insurgency is running, do nothing
-      else
-        {
-          continue
-        }
+AnyWinOfExist(obj){
+    for index, title in obj{
+        if(hwnd := WinExist(title))
+            return, hwnd
     }
-    ; If Insurgency is NOT running, and miner IS running, do nothing
-    else IfWinExist, C:\WINDOWS\system32\cmd.exe - C:\Mining\PhoenixMiner_5.6d_Windows_Real\start_miner.bat
-      {
-        continue 
-      }
-      ; If neither Insurgency nor the miner is running, start the miner
-      else
-        {
-          Run C:\Mining\PhoenixMiner_5.6d_Windows_Real\Custom_Start_Minimized.bat
-        }
+    return, False
 }
