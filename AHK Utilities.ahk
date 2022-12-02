@@ -11,12 +11,21 @@ Menu, Tray, Icon, AHK` Utilities.ico
 idle_timeout := 30000
 ADtoggle := False
 ResolutionToggle := False
+FullScreenToggle := False
 
 F8::Reload ; Reload script
 
+; F15::MsgBox, F15 pressed
+
 ; ### Media Keys (left to right) ###
 ; SC121:: ; Calculator
-SC16B:: ; Explorer # Toggle resolution for Mud and Blood
+SC16B:: Gosub, ToggleResolution ; Explorer
+SC16C:: Gosub, ToggleFullScreen ; Email
+SC132:: Return ; Web Browser
+
+
+; # Toggle resolution for Mud and Blood #
+ToggleResolution:
     If(ResolutionToggle := !ResolutionToggle) {
         ; ChangeResolution(1600, 900)
         ChangeResolution(1280, 720)
@@ -24,8 +33,6 @@ SC16B:: ; Explorer # Toggle resolution for Mud and Blood
         ChangeResolution(2560, 1440)
     }        
 Return
-; SC16C:: ; Email
-; SC132:: ; Web Browser
 
 ChangeResolution(Screen_Width := 2560, Screen_Height := 1440, Color_Depth := 32, Refresh_Rate := 170)
 {
@@ -41,6 +48,17 @@ ChangeResolution(Screen_Width := 2560, Screen_Height := 1440, Color_Depth := 32,
 }
 
 
+; # Full Screen #
+ToggleFullScreen:
+    If(FullScreenToggle := !FullScreenToggle) {
+        WinSet, Style, -0xC40000, A
+        WinMove, A, , 0, 0, %A_ScreenWidth%, %A_ScreenHeight%
+    } Else {
+        WinSet, Style, +0xC40000, A
+    }        
+Return
+
+
 ; ##############################
 ; Mouse 6 & 7 bindings (m6=F24, m7=F23)
 f23::Send ^v
@@ -53,18 +71,6 @@ Pause::
 Sleep 1000
 SendMessage, 0x112, 0xF170, 2,, Program Manager
 return
-
-
-; ##############################
-; Full Screen (ctrl+F11 = full screen, ctrl+F12 = revert)
-^F11::
-    WinSet, Style, -0xC40000, A
-    WinMove, A, , 0, 0, %A_ScreenWidth%, %A_ScreenHeight%
-	Return
-
-^F12::
-    WinSet, Style, +0xC40000, A
-	Return
 
 
 ; ##############################
