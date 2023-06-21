@@ -13,16 +13,33 @@ ADtoggle := False
 ResolutionToggle := False
 FullScreenToggle := False
 
-F8::Reload ; Reload script
+F9::Reload ; Reload script
 
-; F15::MsgBox, F15 pressed
+; # Key substitutions #
+$`;::Send `:
+$+`;::Send `;
+; F7::SendRaw, (
+; F8::SendRaw, )
+; F9::SendRaw, _
+; $[::Send, {{}
+; $]::Send, {}}
+; $+[::Send, {[}
+; $+]::Send, {]}
 
 ; ### Media Keys (left to right) ###
 ; SC121:: ; Calculator
-SC16B:: Gosub, ToggleResolution ; Explorer
-SC16C:: Gosub, ToggleFullScreen ; Email
-SC132:: Return ; Web Browser
+; SC16B:: Gosub, ToggleResolution ; Explorer
+; SC16C:: Gosub, ToggleFullScreen ; Email
+; SC132:: Return ; Web Browser
 
+; # Mouse 6 & 7 bindings (m6=F24, m7=F23) #
+f23::Send ^v
+f24::Send ^c
+
+; # Keyboard shortcuts #
+^F12::Gosub, ToggleFullScreen
+^F11::Gosub, ToggleResolution
+^F10::Gosub, TurnOffMonitor
 
 ; # Toggle resolution for Mud and Blood #
 ToggleResolution:
@@ -47,7 +64,6 @@ ChangeResolution(Screen_Width := 2560, Screen_Height := 1440, Color_Depth := 32,
 	Return DllCall( "ChangeDisplaySettingsA", UInt,&Device_Mode, UInt,0 )
 }
 
-
 ; # Full Screen #
 ToggleFullScreen:
     If(FullScreenToggle := !FullScreenToggle) {
@@ -60,51 +76,45 @@ Return
 
 
 ; ##############################
-; Mouse 6 & 7 bindings (m6=F24, m7=F23)
-f23::Send ^v
-f24::Send ^c
-
-
-; ##############################
-; Turn off Monitor with Pause
-Pause::
-Sleep 1000
-SendMessage, 0x112, 0xF170, 2,, Program Manager
-return
+; Turn off Monitor
+TurnOffMonitor:
+    Sleep 1000
+    SendMessage, 0x112, 0xF170, 2,, Program Manager
+Return
 
 
 ; ##############################
 ; Antimatter Dimensions (hold 'm')
-f6::
-    ADtoggle := !ADtoggle
-    if ADtoggle {
-        SetTimer, repeat_m, 100
-        SetTimer, repeat_s, 60000
-    }
+; f6::
+;     ADtoggle := !ADtoggle
+;     if ADtoggle {
+;         SetTimer, repeat_m, 100
+;         SetTimer, repeat_s, 60000
+;     }
 
-    else {
-        SetTimer, repeat_m, Off
-        SetTimer, repeat_s, Off
-    }
-Return
+;     else {
+;         SetTimer, repeat_m, Off
+;         SetTimer, repeat_s, Off
+;     }
+; Return
 
-repeat_m:
-{
-    If(A_TimeIdlePhysical > idle_timeout And WinExist("Antimatter Dimensions") ){
-        WinActivate
-        Send m
-    }
-    Return
-}
+; repeat_m:
+; {
+;     If(A_TimeIdlePhysical > idle_timeout And WinExist("Antimatter Dimensions") ){
+;         WinActivate
+;         Send m
+;     }
+;     Return
+; }
 
-repeat_s:
-{
-    If(A_TimeIdlePhysical > idle_timeout And WinExist("Antimatter Dimensions") ){
-        WinActivate
-        Send s
-    }
-    Return
-}
+; repeat_s:
+; {
+;     If(A_TimeIdlePhysical > idle_timeout And WinExist("Antimatter Dimensions") ){
+;         WinActivate
+;         Send s
+;     }
+;     Return
+; }
 
 
 ; ##############################
@@ -153,12 +163,43 @@ f24::Send q ; copy
 
 f23::Send d ; combine ; boost
 f24::Send a ; boost
+^F7::
+    Loop 100 {
+        send {LButton}
+    }
+    Return
 
 ; ### Diplomacy is Not an Option ###
 #IfWinActive ahk_exe Diplomacy is Not an Option.exe
 
-F12::
-    loop 9 {
+F6::
+    Loop 9 {
         send {LButton}
     }
+    Return
+
+; ### Project Quarantine ###
+#IfWinActive ahk_exe Test_C.exe
+
+XButton1::
+    Send {f down}
+    KeyWait, XButton1
+    Send {f up}
     return
+XButton2::Send v
+f24::
+    Send {x down}
+    KeyWait, f24
+    Send {x up}
+    return
+f23::
+    Send {t down}
+    KeyWait, f23
+    Send {t up}
+    return
+
+
+; ### Project Quarantine (satisfactory?) ###
+#IfWinActive ahk_exe FactoryGame-Win64-Shipping.exe
+
+F23::MouseClick, left, , , , , D
