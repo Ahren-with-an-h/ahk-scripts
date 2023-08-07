@@ -32,9 +32,14 @@ $+`;::Send `;
 ; SC16C:: Gosub, ToggleFullScreen ; Email
 ; SC132:: Return ; Web Browser
 
-; # Mouse 6 & 7 bindings (m6=F24, m7=F23) #
-f23::Send ^v
-f24::Send ^c
+; # Mouse bindings (m6=F24, m7=F23, m9=f20) #
+F23::Send ^v
+F24::Send ^c
+F20::
+    If WinActive("ahk_exe vlc.exe") {
+        Send, !{f4}
+    }
+    Return
 
 ; # Keyboard shortcuts #
 ^F12::Gosub, ToggleFullScreen
@@ -128,6 +133,7 @@ Return
 ; return
 
 
+
 ; TurboToggle := 0
 ; F10::SetTimer, Turbo, % (TurboToggle := !TurboToggle) ? "3000" : "Off"
 
@@ -161,9 +167,15 @@ f24::Send q ; copy
 ; ### NGU ###
 #IfWinActive ahk_exe NGUIdle.exe
 
-f23::Send d ; combine ; boost
-f24::Send a ; boost
+F23::Send d ; combine ; boost
+F24::Send a ; boost
 ^F7::
+    Loop 10 {
+        send {LButton}
+    }
+    Return
+
+^F8::
     Loop 100 {
         send {LButton}
     }
@@ -199,7 +211,24 @@ f23::
     return
 
 
-; ### Project Quarantine (satisfactory?) ###
+; ### Satisfactory - hold click for crafting ###
 #IfWinActive ahk_exe FactoryGame-Win64-Shipping.exe
 
 F23::MouseClick, left, , , , , D
+
+
+; ### Evolve ###
+#IfWinActive Evolve - Google Chrome
+F24::
+    Loop 10 {
+        send {LButton}
+    sleep 10
+    }
+    Return
+
+F23::
+    Loop 100 {
+        send {LButton}
+    sleep 10
+    }
+    Return
