@@ -7,9 +7,8 @@
 SendMode, Input
 SetWorkingDir, %A_ScriptDir%
 Menu, Tray, Icon, AHK` Utilities.ico
+SetTitleMatchMode 2 ; partial window title matches allowed
 
-idle_timeout := 30000
-ADtoggle := False
 ResolutionToggle := False
 FullScreenToggle := False
 
@@ -33,14 +32,23 @@ $+`;::Send `;
 ; SC132:: Return ; Web Browser
 
 ; # Mouse bindings (m6=F24, m7=F23, m9=f20) #
-F23::Send ^v
-F24::Send ^c
-F20::
+$*F23::Send ^v
+$*F24::Send ^c
+$*F20::
+    If WinActive("ahk_exe Explorer.EXE") {
+        Send, !{f4}
+    }
     If WinActive("ahk_exe vlc.exe") {
         Send, !{f4}
     }
+    If WinActive("ahk_exe ApplicationFrameHost.exe") {
+        Send, !{f4}
+    }
+    If WinActive("ahk_exe Honeyview.exe") {
+        Send, !{f4}
+    }
     Return
-
+    
 ; # Keyboard shortcuts #
 ^F12::Gosub, ToggleFullScreen
 ^F11::Gosub, ToggleResolution
@@ -87,6 +95,16 @@ TurnOffMonitor:
     SendMessage, 0x112, 0xF170, 2,, Program Manager
 Return
 
+
+; ##############################
+; # Pause/Play Youtube
+F7::
+    IfWinExist, YouTube
+    {
+        ControlFocus, 
+        ControlSend, , k 
+        return
+    }
 
 ; ##############################
 ; Antimatter Dimensions (hold 'm')
@@ -146,11 +164,21 @@ Return
 ; # Specific Applications
 ; ##############################
 
+
+; ### Git Bash ###
+#IfWinActive ahk_exe mintty.exe
+f23::Send !{insert} ; paste
+f24::Send ^{insert} ; copy
+
+
 ; ### Polygon ###
 #IfWinActive ahk_class UnrealWindow
 
 *LWin::Return ; disable windows key
 *RWin::Return ; disable windows key
+
+*1::Send {WheelUp}
+*2::Send {WheelDown}
 
 
 ; ; ### Stationeers ###
@@ -163,6 +191,7 @@ Return
 
 f23::Send e ; paste
 f24::Send q ; copy
+
 
 ; ### NGU ###
 #IfWinActive ahk_exe NGUIdle.exe
@@ -181,6 +210,7 @@ F24::Send a ; boost
     }
     Return
 
+
 ; ### Diplomacy is Not an Option ###
 #IfWinActive ahk_exe Diplomacy is Not an Option.exe
 
@@ -189,6 +219,7 @@ F6::
         send {LButton}
     }
     Return
+
 
 ; ### Project Quarantine ###
 #IfWinActive ahk_exe Test_C.exe
@@ -232,3 +263,11 @@ F23::
     sleep 10
     }
     Return
+
+
+; ### (the) Gnorp Apologue ###
+#IfWinActive ahk_exe (the) Gnorp Apologue.exe
+
+$*F23::Send {Click down}
+$*F24::Send {Click up}
+
